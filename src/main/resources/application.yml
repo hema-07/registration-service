@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    default: development
+  application:
+    name: registration-service
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+
+server:
+  port: 9093
+
+
+registration:
+  exclusionUrl: http://localhost:9092/blacklistedUser
+
