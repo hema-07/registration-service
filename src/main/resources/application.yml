@@ -15,9 +15,11 @@ spring:
       enabled: true
 
 server:
-  port: 9093
+  port: 9091
+  servlet:
+    contextPath: /registration/v1.0
 
 
 registration:
-  exclusionUrl: http://localhost:9092/blacklistedUser
+  exclusionUrl: http://localhost:9092/exclusion/v1.0/user
 

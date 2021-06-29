@@ -13,15 +13,19 @@ This is a Spring boot application which demonstrates validating users.
 
 I have used H2 database in this application. It accepts User modal as a request. 
 
-    Spring security added to these endpoints. It checkes the encoded username and passcode that had already assinged in config file.
+    * Spring security added to these endpoints. 
     
-    When User request enters the endpoint, it passes to Validator method to validate the request.
+    * It checkes the encoded username and passcode that had already assinged in config file.
+    
+    * When User request enters the endpoint, it passes to Validator method to validate the request.
 
-    After validation, validated request enters into User service.
+    * After validation, validated request enters into User service.
 
-    Once it received list of blacklisted user from exclusion service, it takes that response and checks against user request.
+    * Once it received list of blacklisted user from exclusion service, 
+    it takes that response and checks against user request.
 
-    After checking, Valid User will be registered and saved to H2 DB, Blacklisted user and Invalid card will throw an error response.
+    * After checking, Valid User will be registered and saved to H2 DB, 
+    Blacklisted user and Invalid card will throw an error response.
 
 I have written test cases for success and failure scenario.
 
@@ -30,8 +34,7 @@ I have installed my own jenkins and created a simple pipeline that pushes my cod
 ### Run configuration
 
     Run this User Registration application as spring boot application.
-    Test file run configuration setup screenshot is in docs folder. 
-
+    
 ### REST POST endpoint for adding new user
 
 This following values are hitting the endpoint as a request from user.
@@ -51,7 +54,7 @@ This following values are hitting the endpoint as a request from user.
     STATUS - User status ; New User- N; 
 
 
-    Post call : http://localhost:9093/user
+    Post call : http://localhost:9091/registration/v1.0/user
 
     {
         "userFirstName": "Hema",
@@ -61,8 +64,56 @@ This following values are hitting the endpoint as a request from user.
         "userCountry": "UK"
     }
     
-    ---------------------------------------
+---------------------------------------
+
+    Expected Output for Success scenario
+
+    {
+        "userId": "5624bae0-2176-40ba-b67b-be493f99a15d",
+        "userFirstName": "Hema",
+        "userLastName": "Tamil",
+        "userDateOfBirth": "384365",
+        "userEmail": "gfdj@yahoo.com",
+        "userCountry": "UK",
+        "userStatus": "N"
+    }    
     
+---------------------------------------
+    Expected output for Existing User Scenario
+    
+    {
+        "ErrorCode": "USER_SERVICE_ERROR_1001",
+        "Error Description": "User is already present, Please enter new user details to register"
+    }
+    
+---------------------------------------
+
+    
+   Expected output for Blacklist User Scenario
+    
+    * Before you proceed make sure Exclusion-service is working properly and returning list of blacklist users.
+    
+    * Run exclusion service and test this endpoint http://localhost:9092/exclusion/v1.0/user
+    
+    Request User Object:
+    
+    {
+        "userFirstName": "Mark",
+        "userLastName": "Josh",
+        "userDateOfBirth": "30/3/95",
+        "userEmail": "mark@gmail.com",
+        "userCountry": "UK"
+    }
+    
+    Expected Blacklist response:
+    
+    {
+        "ErrorCode": "USER_SERVICE_ERROR_1002",
+        "Error Description": "User is BlackListed"
+    }
+    
+---------------------------------------
+  
 ##### Headers: 
     
     Content-Type:application/json
