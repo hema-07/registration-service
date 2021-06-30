@@ -47,11 +47,11 @@ public class UserService {
      * @return Most importantly, it finds an User against blacklisted users, it will throw an message saying blacklisted user.
      */
     public String addUser(User user) {
-
+        User userDetails = null;
         try {
             if (!checkUser(user)) {
 
-                User userDetails = userRepository.findByuserEmail( user.getUserEmail(), user.getUserDateOfBirth() );
+                userDetails = userRepository.findByuserEmail(user.getUserEmail(), user.getUserDateOfBirth());
 
                 if (userDetails == null) {
 
@@ -65,6 +65,7 @@ public class UserService {
 
                     return existingUserFound;
                 }
+
             } else {
 
                 return blackListedUserFound;
@@ -76,7 +77,7 @@ public class UserService {
             logException(e);
         }
 
-        return null;
+        return problemFetchingExclusionService;
     }
 
     private void logException(Exception ex) {
@@ -124,7 +125,7 @@ public class UserService {
     public ValidationResult validate(User user) {
         User validatedUser = null;
 
-        for (Validator validator: this.validators) {
+        for (Validator validator: validators) {
             ValidationResult validationResult = validator.validate(user);
 
             if (validator instanceof UserParameterValidation) {

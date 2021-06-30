@@ -2,14 +2,14 @@ package com.gamesys.registration.controller;
 
 import com.gamesys.registration.entity.User;
 import com.gamesys.registration.modal.ErrorResponse;
-import com.gamesys.registration.repository.UserRepository;
 import com.gamesys.registration.service.UserService;
 import com.gamesys.registration.util.Constants;
+import com.gamesys.registration.validator.ValidationResult;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +20,8 @@ import static com.gamesys.registration.util.Constants.blackListedDescription;
 @SpringBootTest
 public class UserRegistrationControllerTest {
 
-    @Autowired
+    @InjectMocks
     UserRegistrationController userRegistrationController;
-
-    @Autowired
-    UserRepository userRepository;
 
     @Mock
     UserService userService;
@@ -39,6 +36,9 @@ public class UserRegistrationControllerTest {
                 .userCountry("UK")
                 .userEmail("hema34@gmail.com")
                 .build();
+        ValidationResult validationResult = new ValidationResult();
+        validationResult.setValid(true);
+        Mockito.when(userService.validate(user)).thenReturn(validationResult);
         Mockito.when(userService.addUser(user)).thenReturn(Constants.savedNewUser);
         ResponseEntity<?> responseEntity = userRegistrationController.addUser(user);
         Assert.assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -54,7 +54,9 @@ public class UserRegistrationControllerTest {
                 .userCountry("UK")
                 .userEmail("hema@gmail.com")
                 .build();
-        userRepository.save(user);
+        ValidationResult validationResult = new ValidationResult();
+        validationResult.setValid(true);
+        Mockito.when(userService.validate(user)).thenReturn(validationResult);
         Mockito.when(userService.addUser(user)).thenReturn(Constants.existingUserFound);
         ResponseEntity<?> responseEntity = userRegistrationController.addUser(user);
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
@@ -74,6 +76,9 @@ public class UserRegistrationControllerTest {
                 .errorCode(blackListed)
                 .errorDescription(blackListedDescription)
                 .build();
+        ValidationResult validationResult = new ValidationResult();
+        validationResult.setValid(true);
+        Mockito.when(userService.validate(user)).thenReturn(validationResult);
         Mockito.when(userService.addUser(user)).thenReturn(Constants.blackListedUserFound);
         ResponseEntity<?> responseEntity = userRegistrationController.addUser(user);
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());

@@ -51,11 +51,11 @@ public class UserRegistrationController {
 
         String userStatement = userService.addUser(user);
 
-        if (userStatement.equalsIgnoreCase(savedNewUser)) {
+        if (userStatement.equals(savedNewUser)) {
 
             return new ResponseEntity<>( user, HttpStatus.CREATED);
 
-        } else if (userStatement.equalsIgnoreCase(blackListedUserFound)) {
+        } else if (userStatement.equals(blackListedUserFound)) {
 
             logger.error("User is Blacklisted");
             ErrorResponse errorResponse = ErrorResponse.builder()
@@ -64,7 +64,7 @@ public class UserRegistrationController {
                     .build();
             return new ResponseEntity<>( errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 
-        } else if (userStatement.equalsIgnoreCase(existingUserFound)) {
+        } else if (userStatement.equals(existingUserFound)) {
 
             logger.error("User is already present in DB");
             ErrorResponse errorResponse = ErrorResponse.builder()
@@ -73,9 +73,15 @@ public class UserRegistrationController {
                     .build();
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 
+        } else {
+            logger.error("Problem fetching exclusion service");
+            ErrorResponse errorResponse = ErrorResponse.builder()
+                    .errorCode(problemFetchingExclusionErrorCode)
+                    .errorDescription(problemFetchingExclusionService)
+                    .build();
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-            return new ResponseEntity<>( user, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/user", method = GET, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

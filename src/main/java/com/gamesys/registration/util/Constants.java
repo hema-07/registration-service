@@ -42,4 +42,7 @@ public class Constants {
     public static final String existingUserFound = "This is a Existing User";
     public static final String blackListedUserFound = "This is a BlackListed User";
 
+    public static final String problemFetchingExclusionErrorCode = "USER_SERVICE_ERROR_1013";
+    public static final String problemFetchingExclusionService = "There is a problem Fetching ExclusionService";
+
 }

@@ -1,0 +1,25 @@
+spring:
+  profiles:
+    default: test
+  application:
+    name: registration-service
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+
+server:
+  port: 9091
+  servlet:
+    contextPath: /registration/v1.0
+
+
+registration:
+  exclusionUrl: http://localhost:9092/exclusion/v1.0/user
+
